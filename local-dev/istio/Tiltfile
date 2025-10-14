@@ -1,0 +1,61 @@
+load('ext://helm_resource', 'helm_repo', 'helm_resource')
+
+helm_repo(
+  'istio',
+  'https://istio-release.storage.googleapis.com/charts'
+)
+
+# install istio/base helm chart
+helm_resource(
+  'istio-base',
+  'istio/base',
+  resource_deps = ['istio'],
+  namespace = 'istio-system',
+  labels = 'System',
+  flags = [
+    '--version=1.27.1',
+    '--create-namespace',
+  ],
+  auto_init = True,
+  pod_readiness = 'ignore'
+)
+#k8s_resource('istio-base', auto_init=False)
+
+# install istio/istiod helm chart
+helm_resource(
+  'istio-istiod',
+  'istio/istiod',
+  resource_deps = ['istio'],
+  namespace = 'istio-system',
+  labels = 'System',
+  flags = [
+    '--version=1.27.1',
+    '--create-namespace',
+    '--set=autoscaleEnabled=false',
+    '--wait',
+  ],
+  auto_init = True
+)
+
+# install istio/gateway helm chart
+helm_resource(
+  'istio-gateway',
+  'istio/gateway',
+  resource_deps = ['istio-istiod'],
+  namespace = 'istio-gateway',
+  labels = 'System',
+  flags = [
+    '--version=1.27.1',
+    '--set=autoscaling.enabled=false',
+    '--create-namespace',
+  ],
+  auto_init = True
+)
+
+k8s_yaml('gateway.yaml')
+k8s_resource(
+  new_name = 'Gateway',
+  objects = ['tls-gateway'],
+  resource_deps = ['istio-gateway'],
+  labels = ['System'],
+)

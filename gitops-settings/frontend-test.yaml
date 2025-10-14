@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: frontend-test
+spec:
+  args:
+    - name: frontend-url
+  metrics:
+    - name: frontend-test
+      successCondition: result != ""
+      provider:
+        web:
+          url: "{{ args.frontend-url }}/api/time"
+          method: GET
+          timeoutSeconds: 5
+          jsonPath: "{.iso}"

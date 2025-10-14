@@ -1,0 +1,25 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: dev
+  annotations:
+    kargo.akuity.io/color: green
+spec:
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: warehouse
+      sources:
+        direct: true
+  verification:
+    analysisTemplates:
+      - name: frontend-test
+        kind: AnalysisTemplate
+    args:
+      - name: frontend-url
+        value: https://demo-dev.hukmedia.de
+  promotionTemplate:
+    spec:
+      steps:
+        - task:
+            name: promotion

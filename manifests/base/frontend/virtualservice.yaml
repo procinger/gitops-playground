@@ -1,0 +1,26 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: virtualservice
+spec:
+  gateways:
+    - istio-gateway/tls-gateway
+  hosts:
+    - demo-prod.hukmedia.de
+  http:
+    # disable /healthz endpoint
+    - match:
+        - uri:
+            prefix: /healthz
+      directResponse:
+        status: 403
+        body:
+          string: "Forbidden"
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: frontend
+            port:
+              number: 80

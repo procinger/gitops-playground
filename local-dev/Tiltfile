@@ -1,0 +1,5 @@
+# Install Istio
+include('./istio/Tiltfile')
+
+# start local LoadBalancer
+include('./loadbalancer/Tiltfile')

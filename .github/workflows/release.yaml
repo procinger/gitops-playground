@@ -1,0 +1,83 @@
+name: Release new Version
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  get-version:
+    name: Get Next Version
+    runs-on: ubuntu-latest
+    outputs:
+      next: ${{ steps.semver.outputs.next }}
+    steps:
+      - name: Get Next Version
+        id: semver
+        uses: ietf-tools/semver-action@v1.11.0
+        with:
+          token: ${{ github.token }}
+          branch: main
+
+  build-images:
+    needs: get-version
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    strategy:
+      matrix:
+        image:
+          - frontend
+          - backend
+    steps:
+     - name: Login to ghcr.io Registry
+       uses: docker/login-action@v3
+       with:
+         registry: ghcr.io
+         username: ${{ github.actor }}
+         password: ${{ secrets.GITHUB_TOKEN }}
+
+     - uses: actions/checkout@v4
+
+     - name: Build and push frontend
+       uses: docker/build-push-action@v6.9.0
+       with:
+         context: ${{ github.workspace }}/${{ matrix.image }}/
+         file: ${{ github.workspace }}/${{ matrix.image }}/Dockerfile
+         tags: |
+           ghcr.io/${{ github.repository }}/${{ matrix.image }}:latest
+           ghcr.io/${{ github.repository }}/${{ matrix.image }}:${{ needs.get-version.outputs.next }}
+         cache-from: type=registry,ref=ghcr.io/procinger/${{ github.repository }}/${{ matrix.image }}:latest
+         cache-to: type=inline
+         platforms: linux/amd64
+         push: true
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs:
+      - get-version
+      - build-images
+    permissions:
+      packages: write
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get Next Version
+        id: semver
+        uses: ietf-tools/semver-action@v1.11.0
+        with:
+          token: ${{ github.token }}
+          branch: main
+
+      - name: Create Git Tag
+        run: |
+          git tag ${{ needs.get-version.outputs.next }}
+          git push origin ${{ needs.get-version.outputs.next }}
+
+      - name: Create Github Release
+        uses: softprops/action-gh-release@v2.4.2
+        with:
+          tag_name: ${{ needs.get-version.outputs.next }}

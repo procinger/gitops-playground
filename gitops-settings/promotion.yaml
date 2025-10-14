@@ -1,0 +1,93 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: PromotionTask
+metadata:
+  name: promotion
+spec:
+  vars:
+    - name: repoURL
+      value: https://github.com/procinger/gitops-demo-frontend.git
+    - name: frontendImage
+      value: ghcr.io/procinger/gitops-demo-frontend/frontend
+    - name: backendImage
+      value: ghcr.io/procinger/gitops-demo-frontend/backend
+    - name: openPr
+      value: "false"
+
+  steps:
+    - uses: git-clone
+      config:
+        repoURL: ${{ vars.repoURL }}
+        checkout:
+          - branch: main
+            path: ./src
+          - branch: stage/${{ ctx.stage }}
+            create: true
+            path: ./out
+
+    - uses: git-clear
+      config:
+        path: ./out
+
+    - uses: kustomize-set-image
+      as: update-image
+      config:
+        path: ./src/manifests/base
+        images:
+          - image: ${{ vars.frontendImage }}
+            tag: ${{ imageFrom(vars.frontendImage).Tag }}
+          - image: ${{ vars.backendImage }}
+            tag: ${{ imageFrom(vars.backendImage).Tag }}
+
+    - uses: kustomize-build
+      config:
+        path: ./src/manifests/stages/${{ ctx.stage }}
+        outPath: ./out/manifests/stages/${{ ctx.stage }}/manifests.yaml
+
+    - uses: git-commit
+      as: commit
+      config:
+        path: ./out
+        message: ${{ task.outputs['update-image'].commitMessage }}
+
+    # Push changes to the corresponding stage branch
+    - uses: git-push
+      if: ${{ vars.openPr != 'true' }}
+      config:
+        path: ./out
+        targetBranch: stage/${{ctx.stage}}
+
+    # Push the changes to a newly created branch
+    - uses: git-push
+      if: ${{ vars.openPr == 'true' }}
+      as: push
+      config:
+        path: ./out
+        generateTargetBranch: true
+
+    - uses: git-open-pr
+      as: open-pr
+      if: ${{ vars.openPr == 'true' }}
+      config:
+        repoURL: ${{ vars.repoURL }}
+        createTargetBranch: true
+        sourceBranch: ${{ task.outputs.push.branch }}
+        targetBranch: stage/${{ ctx.stage }}
+        title: "${{ctx.stage}} deployment"
+        description: ${{ task.outputs['update-image'].commitMessage }}
+        labels: ["production deployment", "review required"]
+
+    # Wait for the pull request to be merged
+    - uses: git-wait-for-pr
+      as: wait-for-pr
+      if: ${{ vars.openPr == 'true' }}
+      config:
+        repoURL: ${{ vars.repoURL }}
+        prNumber: ${{ task.outputs['open-pr'].pr.id }}
+
+    - uses: argocd-update
+      config:
+        apps:
+          - name: gitops-demo-frontend-${{ ctx.stage }}
+            namespace: argo-cd
+            sources:
+              - repoURL: https://github.com/procinger/gitops-demo-frontend.git

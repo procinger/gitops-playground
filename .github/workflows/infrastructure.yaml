@@ -1,0 +1,125 @@
+name: Validate Infrastructure
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  merge_group:
+
+jobs:
+  validate-gitops-settings:
+    name: Validate gitops-settings
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install K8S tooling
+        uses: yokawasa/action-setup-kube-tools@v0.13.1
+        with:
+          setup-tools: |
+            kubeconform
+          kubeconform: '0.7.0'
+
+      - name: Validate Kargo.io Settings
+        run:  kubeconform -summary -schema-location default -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' ${{ github.workspace }}/gitops-settings
+
+  discover-stages:
+    name: Discover stages
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Find stages
+        id: set-matrix
+        run: |
+          # Find Stages in the manifest directory
+          stages=$(find manifests/stages -type f -name "kustomization.yaml" -exec dirname {} \; | sort | jq -R . | jq -s .)
+          matrix=$(echo "$stages" | jq -c '[ .[] | { name: (split("/")[-1]), path: . } ]')
+          echo "Found Stages:"
+          echo "$matrix" | jq .
+          echo "matrix=$matrix" >> $GITHUB_OUTPUT
+
+  validate-stages:
+    name: Validate stage ${{ matrix.stage.name }}
+    runs-on: ubuntu-latest
+    needs: discover-stages
+    strategy:
+      matrix:
+        stage: ${{ fromJson(needs.discover-stages.outputs.matrix) }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install K8S tooling
+        uses: yokawasa/action-setup-kube-tools@v0.13.1
+        with:
+          setup-tools: |
+            kubectl
+            kubeconform
+          kubectl: '1.34.1'
+          kubeconform: '0.7.0'
+
+      - name: Validate stage
+        working-directory: ${{ matrix.stage.path }}
+        run: |
+          echo "🔍 Render Stage: ${{ matrix.stage.name }}"
+          kubectl kustomize . | kubeconform -summary -schema-location default -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json'
+
+  test:
+    name: test infrastructure
+    runs-on: ubuntu-latest
+    needs: validate-stages
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install K8S tooling
+        uses: yokawasa/action-setup-kube-tools@v0.13.1
+        with:
+          setup-tools: |
+            kubectl
+            kustomize
+            helm
+            tilt
+          kubectl: '1.34.1'
+          kustomize: '5.7.1'
+          helm: '3.19.0'
+          tilt: '0.35.2'
+
+      - name: Prepare cloud-provider-kind
+        run: |
+          VERSION=0.9.0
+          ARCH=linux_amd64
+          URL="https://github.com/kubernetes-sigs/cloud-provider-kind/releases/download/v${VERSION}/cloud-provider-kind_${VERSION}_${ARCH}.tar.gz"
+          curl -Lo ${{ github.workspace }}/cloud-provider-kind.tar.gz "$URL"
+          tar -xzf ${{ github.workspace }}/cloud-provider-kind.tar.gz
+          chmod +x ${{ github.workspace }}/cloud-provider-kind
+          sudo mv ${{ github.workspace }}/cloud-provider-kind /usr/local/bin/cloud-provider-kind
+
+      - name: Create KinD Cluster
+        run: ${{ github.workspace }}/local-dev/kind-with-registry.sh
+
+      - name: Run Tilt CI
+        run: tilt ci
+
+      - name: Test Container reachability
+        run: |
+          GATEWAY_IP=$(kubectl -n istio-gateway get svc istio-gateway -o jsonpath='{.status.loadBalancer.ingress[].ip}')
+          curl --fail http://dev.local/api/time --resolve "dev.local:80:${GATEWAY_IP}"
+
+      - name: Export KinD logs
+        run: kind export logs ${{ github.workspace }}/kind-logs
+
+      - name: Upload KinD logs
+        if: always()
+        uses: actions/upload-artifact@v5.0.0
+        with:
+          name: kind
+          path: '${{ github.workspace }}/kind-logs'
+          retention-days: 3

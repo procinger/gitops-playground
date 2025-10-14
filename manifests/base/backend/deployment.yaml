@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      imagePullSecrets:
+        - name: ghcr-io
+      containers:
+        - name: backend
+          image: ghcr.io/procinger/gitops-demo-frontend/backend:v1.1.0
+          ports:
+            - containerPort: 8080
+              name: api
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "64Mi"
+              cpu: "100m"
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /healthz
+              port: api
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /api/time
+              port: api
+            initialDelaySeconds: 5
+            periodSeconds: 10

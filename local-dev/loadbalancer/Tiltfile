@@ -1,0 +1,5 @@
+local_resource(
+  name = 'LoadBalancer',
+  serve_cmd = 'cloud-provider-kind --gateway-channel standard',
+  labels = ['System'],
+)

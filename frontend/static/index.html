@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>🕒 Time</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+<div class="wrap">
+    <header>
+        <h1>🕒 Demo Time</h1>
+    </header>
+
+    <main>
+        <section class="card">
+            <div class="row">
+                <div>
+                    <h2>Current Time</h2>
+                    <p id="iso" class="big"></p>
+                    <p id="zone" class="muted"></p>
+                </div>
+                <button id="refresh" class="btn">Refresh</button>
+            </div>
+        </section>
+
+        <section class="grid">
+            <div class="tile">
+                <h3>UNIX</h3>
+                <p id="unix" class="mono"></p>
+            </div>
+            <div class="tile">
+                <h3>Local</h3>
+                <p id="local" class="mono"></p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <span>⚙️ Backend: <code>/api/time</code></span>
+    </footer>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>
