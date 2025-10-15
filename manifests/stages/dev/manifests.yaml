@@ -30,7 +30,7 @@ spec:
       - env:
         - name: FOO
           value: BAZ
-        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.3
+        image: ghcr.io/procinger/gitops-demo-frontend:v1.1.0
         livenessProbe:
           httpGet:
             path: /healthz
