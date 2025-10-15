@@ -27,10 +27,11 @@ spec:
         app: gitops-demo-frontend
     spec:
       containers:
-      - env:
-        - name: FOO
-          value: BAZ
-        image: ghcr.io/procinger/gitops-demo-frontend:v1.3.0
+      - envFrom:
+        - configMapRef:
+            name: backend-config-cdddkgd2tg
+            optional: false
+        image: ghcr.io/procinger/gitops-demo-frontend:v1.4.0
         livenessProbe:
           httpGet:
             path: /healthz
@@ -56,3 +57,10 @@ spec:
             memory: 128Mi
       imagePullSecrets:
       - name: ghcr-io
+---
+apiVersion: v1
+data:
+  BACKEND_URL: http://gitops-demo-backend.gitops-demo.svc.cluster.local
+kind: ConfigMap
+metadata:
+  name: backend-config-cdddkgd2tg
