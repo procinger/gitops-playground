@@ -30,7 +30,7 @@ spec:
       - env:
         - name: FOO
           value: BAZ
-        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.0
+        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.1
         livenessProbe:
           exec:
             command:
@@ -55,3 +55,5 @@ spec:
           requests:
             cpu: 200m
             memory: 128Mi
+      imagePullSecrets:
+      - name: ghcr-io
