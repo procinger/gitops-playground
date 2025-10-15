@@ -1,3 +1,22 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: virtualservice
+spec:
+  gateways:
+  - istio-gateway/tls-gateway
+  hosts:
+  - demo-dev.hukmedia.de
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: gitops-demo-frontend
+        port:
+          number: 80
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -31,7 +50,7 @@ spec:
         - configMapRef:
             name: backend-config-5h8mg44k25
             optional: false
-        image: ghcr.io/procinger/gitops-demo-frontend:v1.6.0
+        image: ghcr.io/procinger/gitops-demo-frontend:v1.7.0
         livenessProbe:
           httpGet:
             path: /healthz
