@@ -30,13 +30,12 @@ spec:
       - env:
         - name: FOO
           value: BAZ
-        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.1
+        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.2
         livenessProbe:
-          exec:
-            command:
-            - /bin/sh
-            - -c
-            - '[ -f /run/nginx.pid ] && test -f /proc/$(cat /run/nginx.pid)/exe'
+          httpGet:
+            path: /healthz
+            port: http
+            scheme: HTTP
         name: gitops-demo-frontend
         ports:
         - containerPort: 8080
