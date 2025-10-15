@@ -29,7 +29,7 @@ spec:
       containers:
       - envFrom:
         - configMapRef:
-            name: backend-config-cdddkgd2tg
+            name: backend-config-5h8mg44k25
             optional: false
         image: ghcr.io/procinger/gitops-demo-frontend:v1.4.0
         livenessProbe:
@@ -60,7 +60,7 @@ spec:
 ---
 apiVersion: v1
 data:
-  BACKEND_URL: http://gitops-demo-backend.gitops-demo.svc.cluster.local
+  BACKEND_URL: http://gitops-demo-backend.gitops-demo-backend-dev.svc.cluster.local
 kind: ConfigMap
 metadata:
-  name: backend-config-cdddkgd2tg
+  name: backend-config-5h8mg44k25
