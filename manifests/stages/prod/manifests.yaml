@@ -1,0 +1,85 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: virtualservice
+spec:
+  gateways:
+  - istio-gateway/tls-gateway
+  hosts:
+  - demo-prod.hukmedia.de
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: gitops-demo-frontend
+        port:
+          number: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitops-demo-frontend
+spec:
+  ports:
+  - name: gitops-demo-frontend
+    port: 80
+    targetPort: 8080
+  selector:
+    app: gitops-demo-frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: gitops-demo-frontend
+  name: gitops-demo-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gitops-demo-frontend
+  template:
+    metadata:
+      labels:
+        app: gitops-demo-frontend
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: backend-config-tt4g5tkd9m
+            optional: false
+        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.0
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+            scheme: HTTP
+        name: gitops-demo-frontend
+        ports:
+        - containerPort: 8080
+          name: http
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        resources:
+          limits:
+            cpu: 300m
+            memory: 128Mi
+          requests:
+            cpu: 200m
+            memory: 128Mi
+      imagePullSecrets:
+      - name: ghcr-io
+---
+apiVersion: v1
+data:
+  BACKEND_URL: http://gitops-demo-backend.gitops-demo-backend-prod.svc.cluster.local
+kind: ConfigMap
+metadata:
+  name: backend-config-tt4g5tkd9m
