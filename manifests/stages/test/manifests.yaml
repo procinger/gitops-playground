@@ -6,7 +6,7 @@ spec:
   gateways:
   - istio-gateway/tls-gateway
   hosts:
-  - demo-test.hukmedia.de
+  - demo-prod.hukmedia.de
   http:
   - match:
     - uri:
@@ -50,7 +50,7 @@ spec:
         - configMapRef:
             name: backend-config-4t75dc4285
             optional: false
-        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.0
+        image: ghcr.io/procinger/gitops-demo-frontend:v1.1.0
         livenessProbe:
           httpGet:
             path: /healthz
