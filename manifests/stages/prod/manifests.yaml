@@ -50,7 +50,7 @@ spec:
         - configMapRef:
             name: backend-config-tt4g5tkd9m
             optional: false
-        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.2
+        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.4
         livenessProbe:
           httpGet:
             path: /healthz
