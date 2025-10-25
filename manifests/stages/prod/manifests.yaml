@@ -23,9 +23,9 @@ metadata:
   name: gitops-demo-frontend
 spec:
   ports:
-  - name: gitops-demo-frontend
+  - name: http
     port: 80
-    targetPort: 8080
+    targetPort: http
   selector:
     app: gitops-demo-frontend
 ---
@@ -37,6 +37,7 @@ metadata:
   name: gitops-demo-frontend
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: gitops-demo-frontend
@@ -50,10 +51,10 @@ spec:
         - configMapRef:
             name: backend-config-tt4g5tkd9m
             optional: false
-        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.4
+        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.11
         livenessProbe:
           httpGet:
-            path: /healthz
+            path: /
             port: http
             scheme: HTTP
         name: gitops-demo-frontend
@@ -62,7 +63,7 @@ spec:
           name: http
         readinessProbe:
           httpGet:
-            path: /
+            path: /healthz
             port: http
             scheme: HTTP
           initialDelaySeconds: 10
