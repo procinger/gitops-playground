@@ -58,7 +58,7 @@ spec:
         - configMapRef:
             name: backend-config-tt4g5tkd9m
             optional: false
-        image: ghcr.io/procinger/gitops-demo-frontend:v1.1.9
+        image: ghcr.io/procinger/gitops-demo-frontend:v1.2.0
         livenessProbe:
           httpGet:
             path: /
