@@ -23,6 +23,9 @@ spec:
         host: gitops-demo-frontend
         port:
           number: 80
+  - redirect:
+      redirectCode: 302
+      uri: /
 ---
 apiVersion: v1
 kind: Service
@@ -58,7 +61,7 @@ spec:
         - configMapRef:
             name: backend-config-5h8mg44k25
             optional: false
-        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.12
+        image: ghcr.io/procinger/gitops-demo-frontend:v1.1.0
         livenessProbe:
           httpGet:
             path: /
