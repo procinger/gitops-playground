@@ -8,6 +8,13 @@ spec:
   hosts:
   - demo-dev.hukmedia.de
   http:
+  - directResponse:
+      body:
+        string: Forbidden
+      status: 403
+    match:
+    - uri:
+        prefix: /healthz
   - match:
     - uri:
         prefix: /
@@ -51,7 +58,7 @@ spec:
         - configMapRef:
             name: backend-config-5h8mg44k25
             optional: false
-        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.11
+        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.12
         livenessProbe:
           httpGet:
             path: /
