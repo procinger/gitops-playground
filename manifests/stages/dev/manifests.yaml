@@ -17,7 +17,12 @@ spec:
         prefix: /healthz
   - match:
     - uri:
+        exact: true
         prefix: /
+  - match:
+    - uri:
+        exact: true
+        prefix: /api/time
     route:
     - destination:
         host: gitops-demo-frontend
@@ -61,7 +66,7 @@ spec:
         - configMapRef:
             name: backend-config-5h8mg44k25
             optional: false
-        image: ghcr.io/procinger/gitops-demo-frontend:v1.1.0
+        image: ghcr.io/procinger/gitops-demo-frontend:v1.1.1
         livenessProbe:
           httpGet:
             path: /
