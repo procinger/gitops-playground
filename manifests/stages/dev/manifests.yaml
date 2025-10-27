@@ -17,10 +17,7 @@ spec:
         prefix: /healthz
   - match:
     - uri:
-        exact: /api/time
-    redirect:
-      redirectCode: 302
-      uri: /api/time
+        prefix: /api/time
   - match:
     - uri:
         exact: /
@@ -67,7 +64,7 @@ spec:
         - configMapRef:
             name: backend-config-5h8mg44k25
             optional: false
-        image: ghcr.io/procinger/gitops-demo-frontend:v1.1.5
+        image: ghcr.io/procinger/gitops-demo-frontend:v1.1.6
         livenessProbe:
           httpGet:
             path: /
