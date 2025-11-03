@@ -58,7 +58,7 @@ spec:
         - configMapRef:
             name: backend-config-5h8mg44k25
             optional: false
-        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.4
+        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.6
         livenessProbe:
           httpGet:
             path: /
@@ -88,7 +88,19 @@ spec:
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
-  name: namespace-isolation
+  name: isolation-app
+spec:
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        namespaces:
+        - gitops-demo-backend-dev
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: isolation-base
 spec:
   action: ALLOW
   rules:
@@ -97,7 +109,6 @@ spec:
         namespaces:
         - gitops-demo-frontend
         - istio-gateway
-        - gitops-demo-backend-dev
 ---
 apiVersion: security.istio.io/v1
 kind: PeerAuthentication
