@@ -58,7 +58,7 @@ spec:
         - configMapRef:
             name: backend-config-5h8mg44k25
             optional: false
-        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.3
+        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.4
         livenessProbe:
           httpGet:
             path: /
@@ -95,6 +95,7 @@ spec:
   - from:
     - source:
         namespaces:
+        - gitops-demo-frontend
         - istio-gateway
         - gitops-demo-backend-dev
 ---
