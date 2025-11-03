@@ -58,7 +58,7 @@ spec:
         - configMapRef:
             name: backend-config-5h8mg44k25
             optional: false
-        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.2
+        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.3
         livenessProbe:
           httpGet:
             path: /
@@ -95,7 +95,16 @@ spec:
   - from:
     - source:
         namespaces:
+        - istio-gateway
         - gitops-demo-backend-dev
+---
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: strict-mtls
+spec:
+  mtls:
+    mode: STRICT
 ---
 apiVersion: v1
 data:
