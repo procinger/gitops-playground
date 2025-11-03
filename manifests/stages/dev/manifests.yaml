@@ -58,7 +58,7 @@ spec:
         - configMapRef:
             name: backend-config-5h8mg44k25
             optional: false
-        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.1
+        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.2
         livenessProbe:
           httpGet:
             path: /
@@ -84,6 +84,18 @@ spec:
             memory: 128Mi
       imagePullSecrets:
       - name: ghcr-io
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: namespace-isolation
+spec:
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        namespaces:
+        - gitops-demo-backend-dev
 ---
 apiVersion: v1
 data:
