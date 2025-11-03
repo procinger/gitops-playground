@@ -56,9 +56,9 @@ spec:
       containers:
       - envFrom:
         - configMapRef:
-            name: backend-config-5h8mg44k25
+            name: backend-config-tt4g5tkd9m
             optional: false
-        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.6
+        image: ghcr.io/procinger/gitops-demo-frontend:v1.0.7
         livenessProbe:
           httpGet:
             path: /
@@ -120,7 +120,7 @@ spec:
 ---
 apiVersion: v1
 data:
-  BACKEND_URL: http://gitops-demo-backend.gitops-demo-backend-dev.svc.cluster.local
+  BACKEND_URL: http://gitops-demo-backend.gitops-demo-backend-prod.svc.cluster.local
 kind: ConfigMap
 metadata:
-  name: backend-config-5h8mg44k25
+  name: backend-config-tt4g5tkd9m
