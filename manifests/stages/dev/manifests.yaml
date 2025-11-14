@@ -20,7 +20,7 @@ spec:
         - configMapRef:
             name: backend-config-5h8mg44k25
             optional: false
-        image: ghcr.io/procinger/gitops-demo-frontend/frontend:v1.6.0
+        image: ghcr.io/procinger/gitops-demo-frontend/frontend:v1.6.1
         livenessProbe:
           httpGet:
             path: /
@@ -102,7 +102,7 @@ spec:
         app: backend
     spec:
       containers:
-      - image: ghcr.io/procinger/gitops-demo-frontend/backend:v1.6.0
+      - image: ghcr.io/procinger/gitops-demo-frontend/backend:v1.6.1
         livenessProbe:
           httpGet:
             path: /healthz
