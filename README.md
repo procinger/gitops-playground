@@ -29,9 +29,11 @@ All of the above tools must be installed and available in the $PATH Environment 
 tilt up
 ```
 
-Getting Load Balancer IP Address
+Getting Load Balancer External-IP Address
 ```bash
  kubectl -n istio-gateway get service istio-gateway
+ NAME            TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)                                      AGE
+istio-gateway   LoadBalancer   10.96.133.29   172.18.0.3    15021:31704/TCP,80:30396/TCP,443:30233/TCP   5h46m
 ```
 
 Sending a Request trough the Load Balancer / Istio
