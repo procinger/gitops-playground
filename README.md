@@ -19,6 +19,7 @@ to be as close as possible to a production system. To ensure that Istio also has
 * [KinD](https://kind.sigs.k8s.io/)
 * [KinD Cloud Provider](https://github.com/kubernetes-sigs/cloud-provider-kind)
 * [Tilt.dev](https://tilt.dev/)
+* [Helm](https://helm.sh/)
 
 
 ### Spinning Up the Local Development Environment
