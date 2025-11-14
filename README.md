@@ -14,7 +14,7 @@ This project consists of a simple frontend and backend. The backend returns the 
 KinD with Tilt is used as the local development environment. The local development environment also uses Istio
 to be as close as possible to a production system. To ensure that Istio also has a load balancer, `kind cloud provider` is used.
 
-### Required Tooling 
+### Required Tooling for Local Development
 * [Docker](https://www.docker.com/)
 * [KinD](https://kind.sigs.k8s.io/)
 * [KinD Cloud Provider](https://github.com/kubernetes-sigs/cloud-provider-kind)
@@ -39,7 +39,7 @@ $GATEWAY_IP=$(kubectl -n istio-gateway get svc istio-gateway -o jsonpath='{.stat
 curl --fail http://dev.local/api/time --resolve "dev.local:80:${GATEWAY_IP}"
 ```
 
-The browser can also be used to send requests. To do this, the Gateway IP must be provided via DNS. Example /etc/hosts
+The browser can also be used to send requests. To do this, the Gateway IP must be provided via DNS. Example `/etc/hosts`
 ````bash
 <the-ip-of-the-gateway> dev.local
 ````
