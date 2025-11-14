@@ -18,9 +18,9 @@ spec:
       containers:
       - envFrom:
         - configMapRef:
-            name: backend-config-g68k6b97h6
+            name: backend-config-7cd8g48fhd
             optional: false
-        image: ghcr.io/procinger/gitops-demo-frontend/frontend:v1.6.11
+        image: ghcr.io/procinger/gitops-demo-frontend/frontend:v1.6.12
         livenessProbe:
           httpGet:
             path: /
@@ -93,6 +93,7 @@ metadata:
   name: backend
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: backend
@@ -102,7 +103,7 @@ spec:
         app: backend
     spec:
       containers:
-      - image: ghcr.io/procinger/gitops-demo-frontend/backend:v1.6.11
+      - image: ghcr.io/procinger/gitops-demo-frontend/backend:v1.6.12
         livenessProbe:
           httpGet:
             path: /healthz
@@ -163,7 +164,7 @@ spec:
 ---
 apiVersion: v1
 data:
-  BACKEND_URL: http://backend:80
+  BACKEND_URL: http://backend.gitops-demo-frontend-dev.svc.cluster.local
 kind: ConfigMap
 metadata:
-  name: backend-config-g68k6b97h6
+  name: backend-config-7cd8g48fhd
