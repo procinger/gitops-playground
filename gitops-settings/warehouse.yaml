@@ -25,4 +25,4 @@ spec:
         strictSemvers: false
   freightCreationPolicy: Automatic
   freightCreationCriteria:
-    expression: imageFrom('ghcr.io/procinger/gitops-demo-frontend/frontend').Tag == commitFrom('https://github.com/procinger/gitops-demo-frontend.git').Tag
+    expression: imageFrom('ghcr.io/procinger/gitops-demo-frontend/backend').Tag == imageFrom('ghcr.io/procinger/gitops-demo-frontend/frontend').Tag == commitFrom('https://github.com/procinger/gitops-demo-frontend.git').Tag
