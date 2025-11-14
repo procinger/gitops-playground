@@ -18,7 +18,7 @@ spec:
       containers:
       - envFrom:
         - configMapRef:
-            name: backend-config-5h8mg44k25
+            name: backend-config-g68k6b97h6
             optional: false
         image: ghcr.io/procinger/gitops-demo-frontend/frontend:v1.6.10
         livenessProbe:
@@ -102,7 +102,7 @@ spec:
         app: backend
     spec:
       containers:
-      - image: ghcr.io/procinger/gitops-demo-frontend/backend:v1.6.10
+      - image: ghcr.io/procinger/gitops-demo-frontend/backend:v1.6.11
         livenessProbe:
           httpGet:
             path: /healthz
@@ -144,26 +144,13 @@ spec:
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
-  name: isolation-app
+  name: isolation
 spec:
   action: ALLOW
   rules:
   - from:
     - source:
         namespaces:
-        - gitops-demo-backend-dev
----
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata:
-  name: isolation-base
-spec:
-  action: ALLOW
-  rules:
-  - from:
-    - source:
-        namespaces:
-        - gitops-demo-frontend
         - istio-gateway
 ---
 apiVersion: security.istio.io/v1
@@ -176,7 +163,7 @@ spec:
 ---
 apiVersion: v1
 data:
-  BACKEND_URL: http://gitops-demo-backend.gitops-demo-backend-dev.svc.cluster.local
+  BACKEND_URL: http://backend:80
 kind: ConfigMap
 metadata:
-  name: backend-config-5h8mg44k25
+  name: backend-config-g68k6b97h6
