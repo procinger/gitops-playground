@@ -46,3 +46,13 @@ The browser can also be used to send requests. To do this, the Gateway IP must b
 ````bash
 <the-ip-of-the-gateway> dev.local
 ````
+
+### Project Structure
+``` 
+backend             # Golang Application for the Backend
+frontend            # Golang Application for the Frontend
+gitops-settings     # Kargo.io Settings
+local-dev           # Tilt.dev Configuration
+manifests           # kustomization for all environments including the local development environment
+Tiltfile            # Entrypoint for tilt up
+```
