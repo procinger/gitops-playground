@@ -31,8 +31,8 @@ tilt up
 
 Getting Load Balancer External-IP Address
 ```bash
- kubectl -n istio-gateway get service istio-gateway
- NAME            TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)                                      AGE
+kubectl -n istio-gateway get service istio-gateway
+NAME            TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)                                      AGE
 istio-gateway   LoadBalancer   10.96.133.29   172.18.0.3    15021:31704/TCP,80:30396/TCP,443:30233/TCP   5h46m
 ```
 
