@@ -20,7 +20,7 @@ spec:
         - configMapRef:
             name: backend-config-tk67b995gg
             optional: false
-        image: ghcr.io/procinger/gitops-demo-frontend/frontend:v1.6.16
+        image: ghcr.io/procinger/gitops-demo-frontend/frontend:v1.6.17
         livenessProbe:
           httpGet:
             path: /
@@ -103,7 +103,7 @@ spec:
         app: backend
     spec:
       containers:
-      - image: ghcr.io/procinger/gitops-demo-frontend/backend:v1.6.16
+      - image: ghcr.io/procinger/gitops-demo-frontend/backend:v1.6.17
         livenessProbe:
           httpGet:
             path: /healthz
@@ -152,7 +152,7 @@ spec:
   - from:
     - source:
         namespaces:
-        - gitops-demo-frontend-test
+        - gitops-demo-frontend-dev
         - istio-gateway
 ---
 apiVersion: security.istio.io/v1
