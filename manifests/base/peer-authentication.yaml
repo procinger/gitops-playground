@@ -4,4 +4,4 @@ metadata:
   name: strict-mtls
 spec:
   mtls:
-    mode: PERMISSIVE
+    mode: STRICT
