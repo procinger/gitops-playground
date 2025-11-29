@@ -4,8 +4,9 @@ metadata:
   name: backend
 spec:
   ports:
-    - name: tcp-api
-      targetPort: api
+    - name: http-api
       port: 80
+      targetPort: api
+      appProtocol: http
   selector:
     app: backend

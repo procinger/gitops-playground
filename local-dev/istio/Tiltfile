@@ -13,7 +13,7 @@ helm_resource(
   namespace = 'istio-system',
   labels = 'System',
   flags = [
-    '--version=1.27.1',
+    '--version=1.28.0',
     '--create-namespace',
   ],
   auto_init = True,
@@ -29,9 +29,15 @@ helm_resource(
   namespace = 'istio-system',
   labels = 'System',
   flags = [
-    '--version=1.27.1',
+    '--version=1.28.0',
     '--create-namespace',
     '--set=autoscaleEnabled=false',
+    '--set=traceSampling=100.0',
+    '--set=global.proxy.tracer=zipkin',
+    '--set=meshConfig.enableTracing=true',
+    '--set=meshConfig.ingressService=istio-gateway',
+    '--set=meshConfig.ingressSelector=gateway',
+    '--set=meshConfig.defaultConfig.tracing.zipkin.address=jaeger-collector.istio-system:9411',
     '--wait',
   ],
   auto_init = True
@@ -45,7 +51,7 @@ helm_resource(
   namespace = 'istio-gateway',
   labels = 'System',
   flags = [
-    '--version=1.27.1',
+    '--version=1.28.0',
     '--set=autoscaling.enabled=false',
     '--create-namespace',
   ],

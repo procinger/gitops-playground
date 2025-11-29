@@ -1,0 +1,32 @@
+load('ext://helm_resource', 'helm_repo', 'helm_resource')
+
+helm_repo(
+  'jaegertracing',
+  'https://jaegertracing.github.io/helm-charts'
+)
+
+helm_resource(
+  'jaeger',
+  'jaegertracing/jaeger',
+  resource_deps = ['istio'],
+  namespace = 'istio-system',
+  labels = 'System',
+  flags = [
+    '--version=3.4.1',
+    '--create-namespace',
+    '--set=query.enabled=false',
+    '--set=provisionDataStore.cassandra=false',
+    '--set=allInOne.enabled=true',
+    '--set=storage.type=memory',
+    '--set=agent.enabled=false',
+    '--set=collector.enabled=false',
+  ],
+  auto_init = False,
+  pod_readiness = 'ignore'
+)
+
+k8s_resource(
+  workload = 'jaeger',
+  labels = ['System'],
+  port_forwards = '16686:16686',
+)

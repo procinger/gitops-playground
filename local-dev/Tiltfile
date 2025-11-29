@@ -3,3 +3,6 @@ include('./istio/Tiltfile')
 
 # start local LoadBalancer
 include('./loadbalancer/Tiltfile')
+
+# Install Jaeger
+include('./jaeger/Tiltfile')
