@@ -43,6 +43,7 @@ func main() {
 				w.WriteHeader(http.StatusNoContent)
 				return
 			}
+			log.Printf("%s %s %s %s", r.Method, r.UserAgent(), r.URL.Path, r.Header)
 			h.ServeHTTP(w, r)
 		})
 	}

@@ -22,6 +22,14 @@ func main() {
 	}
 	proxy := httputil.NewSingleHostReverseProxy(backendURL)
 
+	originalDirector := proxy.Director
+	proxy.Director = func(req *http.Request) {
+		originalDirector(req)
+		req.URL.Scheme = backendURL.Scheme
+		req.URL.Host = backendURL.Host
+		req.Host = backendURL.Host
+	}
+
 	mux := http.NewServeMux()
 
 	mux.Handle("/api/", proxy)
@@ -58,6 +66,6 @@ func loggingMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 		next.ServeHTTP(w, r)
-		log.Printf("%s %s %s", r.Method, r.URL.Path, time.Since(start))
+		log.Printf("%s %s %s %s %s", r.Method, r.UserAgent(), r.URL.Path, time.Since(start), r.Header)
 	})
 }
