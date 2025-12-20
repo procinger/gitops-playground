@@ -1,0 +1,42 @@
+load('ext://helm_resource', 'helm_repo', 'helm_resource')
+
+helm_repo(
+  'kiali-server',
+  'https://kiali.org/helm-charts'
+)
+
+helm_resource(
+  'kiali',
+  'kiali-server/kiali-server',
+  resource_deps = ['istio', 'jaeger', 'prometheus'],
+  namespace = 'istio-system',
+  labels = 'System',
+  flags = [
+    '--version=2.19.0',
+    '--create-namespace',
+    '--set=clustering.autodetect_secrets.enabled=false',
+    '--set=kiali_feature_flags.validations.skip_wildcard_gateway_hosts=true',
+    '--set=external_services.prometheus.enabled=true',
+    '--set=external_services.prometheus.url=http://prometheus-server.prometheus',
+    '--set=external_services.grafana.enabled=false',
+    '--set=external_services.tracing.enabled=true',
+    '--set=external_services.tracing.internal_url=http://jaeger-query:16685/jaeger',
+    '--set=external_services.tracing.use_grpc=true',
+    '--set=istio.root_namespace=istio-system',
+    '--set=istio.component_status.enabled=true',
+    '--set=istio.component_status.components[0].app_label=istiod',
+    '--set=istio.component_status.components[0].is_core=true',
+    '--set=istio.component_status.components[1].app_label=istio-gateway',
+    '--set=istio.component_status.components[1].is_core=true',
+    '--set=istio.component_status.components[1].is_proxy=true',
+    '--set=istio.component_status.components[1].namespace=istio-gateway',
+  ],
+  auto_init = False,
+  pod_readiness = 'ignore'
+)
+
+k8s_resource(
+  workload = 'kiali',
+  labels = ['System'],
+  port_forwards = '20001:20001',
+)

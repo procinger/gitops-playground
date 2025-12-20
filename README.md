@@ -26,6 +26,9 @@ to be as close as possible to a production system. To ensure that Istio also has
 All of the above tools must be installed and available in the $PATH Environment Variable.
 
 ```bash
+# spin up kind cluster with registry
+local-dev/kind-with-registry.sh
+# spin up local development environment
 tilt up
 ```
 
@@ -53,6 +56,8 @@ backend             # Golang Application for the Backend
 frontend            # Golang Application for the Frontend
 gitops-settings     # Kargo.io Settings
 local-dev           # Tilt.dev Configuration
-manifests           # kustomization for all environments including the local development environment
-Tiltfile            # Entrypoint for tilt up
+manifests           # kustomization for all environments
+base                # Base Manifests for all Environments
+stages              # Different Configurations per Environment
+Tiltfile            # Entrypoint for Tilt.dev
 ```

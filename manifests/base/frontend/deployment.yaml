@@ -4,6 +4,7 @@ metadata:
   name: frontend
   labels:
     app: frontend
+    version: ""
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -14,6 +15,7 @@ spec:
     metadata:
       labels:
         app: frontend
+        version: ""
     spec:
       imagePullSecrets:
         - name: ghcr-io

@@ -10,28 +10,20 @@ import (
 	"time"
 )
 
+const DefaultBackendHost = "http://backend:8080"
+
 func main() {
 	backendHost := os.Getenv("BACKEND_URL")
 	if backendHost == "" {
-		backendHost = "http://backend:8080"
+		backendHost = DefaultBackendHost
 	}
 
-	backendURL, err := url.Parse(backendHost)
+	proxy, err := NewProxy(backendHost)
 	if err != nil {
-		log.Fatalf("invalid BACKEND_URL: %v", err)
-	}
-	proxy := httputil.NewSingleHostReverseProxy(backendURL)
-
-	originalDirector := proxy.Director
-	proxy.Director = func(req *http.Request) {
-		originalDirector(req)
-		req.URL.Scheme = backendURL.Scheme
-		req.URL.Host = backendURL.Host
-		req.Host = backendURL.Host
+		log.Fatalf("failed to create proxy: %v", err)
 	}
 
 	mux := http.NewServeMux()
-
 	mux.Handle("/api/", proxy)
 
 	fs := http.FileServer(http.Dir("./static"))
@@ -56,7 +48,7 @@ func main() {
 		IdleTimeout:       60 * time.Second,
 	}
 
-	log.Printf("Frontend reachable at %s (Backend: %s)", addr, backendHost)
+	log.Printf("Frontend reachable at %s (Backend at: %s)", addr, backendHost)
 	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		log.Fatalf("Server Error: %v", err)
 	}
@@ -68,4 +60,23 @@ func loggingMiddleware(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 		log.Printf("%s %s %s %s %s", r.Method, r.UserAgent(), r.URL.Path, time.Since(start), r.Header)
 	})
+}
+
+func NewProxy(host string) (*httputil.ReverseProxy, error) {
+	backendURL, err := url.Parse(host)
+	if err != nil {
+		log.Fatalf("invalid BACKEND_URL: %v", err)
+		return nil, err
+	}
+
+	proxy := httputil.NewSingleHostReverseProxy(backendURL)
+	originalDirector := proxy.Director
+	proxy.Director = func(req *http.Request) {
+		originalDirector(req)
+		req.URL.Scheme = backendURL.Scheme
+		req.URL.Host = backendURL.Host
+		req.Host = backendURL.Host
+	}
+
+	return proxy, nil
 }

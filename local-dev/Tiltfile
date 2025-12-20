@@ -6,3 +6,9 @@ include('./loadbalancer/Tiltfile')
 
 # Install Jaeger
 include('./jaeger/Tiltfile')
+
+# Install Kiali
+include('./kiali/Tiltfile')
+
+# Install Prometheus
+include('./prometheus/Tiltfile')

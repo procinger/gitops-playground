@@ -1,0 +1,28 @@
+load('ext://helm_resource', 'helm_repo', 'helm_resource')
+
+helm_repo(
+  'prometheus-community',
+  'https://prometheus-community.github.io/helm-charts'
+)
+
+helm_resource(
+  'prometheus',
+  'prometheus-community/prometheus',
+  namespace='prometheus',
+  labels = 'System',
+  flags = [
+    '--version=27.52.0',
+    '--create-namespace',
+    '--set=server.retention=2h',
+    '--set=prometheus-pushgateway.enabled=false',
+    '--set=alertmanager.enabled=false',
+    '--set=prometheus-node-exporter.enabled=false',
+  ],
+  auto_init = False,
+)
+
+k8s_resource(
+  workload = 'prometheus',
+  labels = ['System'],
+  port_forwards = '9090:9090',
+)
