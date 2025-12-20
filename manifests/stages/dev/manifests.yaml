@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: frontend
+    version: v1.1.0
   name: frontend
 spec:
   replicas: 1
@@ -14,13 +15,14 @@ spec:
     metadata:
       labels:
         app: frontend
+        version: v1.1.0
     spec:
       containers:
       - envFrom:
         - configMapRef:
             name: backend-config-tk67b995gg
             optional: false
-        image: ghcr.io/procinger/gitops-demo-frontend/frontend:v1.2.2
+        image: ghcr.io/procinger/gitops-demo-frontend/frontend:v1.2.3
         livenessProbe:
           httpGet:
             path: /
@@ -90,6 +92,7 @@ kind: Deployment
 metadata:
   labels:
     app: backend
+    version: v1.1.0
   name: backend
 spec:
   replicas: 1
@@ -101,9 +104,10 @@ spec:
     metadata:
       labels:
         app: backend
+        version: v1.1.0
     spec:
       containers:
-      - image: ghcr.io/procinger/gitops-demo-frontend/backend:v1.2.2
+      - image: ghcr.io/procinger/gitops-demo-frontend/backend:v1.2.3
         livenessProbe:
           httpGet:
             path: /healthz
