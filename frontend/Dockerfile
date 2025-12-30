@@ -18,7 +18,7 @@ RUN adduser \
 COPY go.mod go.mod
 COPY main.go  main.go
 
-RUN --mount=type=cache,target="/root/.cache/go-build" GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -ldflags="-w -s" -o frontend
+RUN --mount=type=cache,target="/root/.cache/go-build" CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -ldflags="" -o frontend
 
 ####### demo-app
 FROM scratch

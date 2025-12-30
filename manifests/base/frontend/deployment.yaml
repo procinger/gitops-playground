@@ -5,9 +5,6 @@ metadata:
   labels:
     app: frontend
     version: ""
-  annotations:
-    instrumentation.opentelemetry.io/inject-go: 'true'
-    instrumentation.opentelemetry.io/otel-go-auto-target-exe: '/frontend'
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -19,6 +16,9 @@ spec:
       labels:
         app: frontend
         version: ""
+      annotations:
+        instrumentation.opentelemetry.io/inject-go: 'true'
+        instrumentation.opentelemetry.io/otel-go-auto-target-exe: '/frontend'
     spec:
       imagePullSecrets:
         - name: ghcr-io
