@@ -18,7 +18,7 @@ RUN adduser \
 COPY go.mod go.mod
 COPY main.go  main.go
 
-RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -ldflags="-w -s" -o backend
+RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -ldflags="" -o backend
 
 ####### demo-app
 FROM scratch
