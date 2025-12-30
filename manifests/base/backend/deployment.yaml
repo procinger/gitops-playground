@@ -16,6 +16,9 @@ spec:
       labels:
         app: backend
         version: ""
+      annotations:
+        instrumentation.opentelemetry.io/inject-go: 'true'
+        instrumentation.opentelemetry.io/otel-go-auto-target-exe: '/backend'
     spec:
       imagePullSecrets:
         - name: ghcr-io
