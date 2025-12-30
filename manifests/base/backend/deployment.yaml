@@ -5,6 +5,9 @@ metadata:
   labels:
     app: backend
     version: ""
+  annotations:
+    instrumentation.opentelemetry.io/inject-go: 'true'
+    instrumentation.opentelemetry.io/otel-go-auto-target-exe: '/backend'
 spec:
   replicas: 1
   revisionHistoryLimit: 3
