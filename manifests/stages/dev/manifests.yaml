@@ -93,9 +93,6 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    instrumentation.opentelemetry.io/inject-go: "true"
-    instrumentation.opentelemetry.io/otel-go-auto-target-exe: /backend
   labels:
     app: backend
     version: v1.1.0
@@ -108,12 +105,15 @@ spec:
       app: backend
   template:
     metadata:
+      annotations:
+        instrumentation.opentelemetry.io/inject-go: "true"
+        instrumentation.opentelemetry.io/otel-go-auto-target-exe: /backend
       labels:
         app: backend
         version: v1.1.0
     spec:
       containers:
-      - image: ghcr.io/procinger/gitops-demo-frontend/backend:v1.3.0
+      - image: ghcr.io/procinger/gitops-demo-frontend/backend:v1.4.0
         livenessProbe:
           httpGet:
             path: /healthz
