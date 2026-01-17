@@ -21,7 +21,7 @@ spec:
       debug:
         verbosity: detailed
       otlphttp/prometheus:
-        endpoint: http://monitoring-kube-prometheus-prometheus:9090/api/v1/otlp
+        endpoint: http://prometheus-server:9090/api/v1/otlp
         tls:
           insecure: true
       otlp:
