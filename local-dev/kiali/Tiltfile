@@ -17,10 +17,10 @@ helm_resource(
     '--set=clustering.autodetect_secrets.enabled=false',
     '--set=kiali_feature_flags.validations.skip_wildcard_gateway_hosts=true',
     '--set=external_services.prometheus.enabled=true',
-    '--set=external_services.prometheus.url=http://prometheus-server.prometheus',
+    '--set=external_services.prometheus.url=http://prometheus-server',
     '--set=external_services.grafana.enabled=false',
     '--set=external_services.tracing.enabled=true',
-    '--set=external_services.tracing.internal_url=http://jaeger-query:16685/jaeger',
+    '--set=external_services.tracing.internal_url=http://jaeger:16685/jaeger',
     '--set=external_services.tracing.use_grpc=true',
     '--set=istio.root_namespace=istio-system',
     '--set=istio.component_status.enabled=true',
@@ -32,7 +32,6 @@ helm_resource(
     '--set=istio.component_status.components[1].namespace=istio-gateway',
   ],
   auto_init = False,
-  pod_readiness = 'ignore'
 )
 
 k8s_resource(
