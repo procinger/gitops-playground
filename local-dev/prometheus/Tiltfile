@@ -8,7 +8,7 @@ helm_repo(
 helm_resource(
   'prometheus',
   'prometheus-community/prometheus',
-  namespace='prometheus',
+  namespace='observability',
   labels = 'System',
   flags = [
     '--version=27.52.0',

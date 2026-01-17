@@ -9,7 +9,7 @@ helm_resource(
   'kiali',
   'kiali-server/kiali-server',
   resource_deps = ['istio', 'jaeger', 'prometheus'],
-  namespace = 'istio-system',
+  namespace = 'observability',
   labels = 'System',
   flags = [
     '--version=2.19.0',

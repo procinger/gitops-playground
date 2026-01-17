@@ -1,0 +1,47 @@
+load('ext://helm_resource', 'helm_repo', 'helm_resource')
+
+helm_repo(
+  'opentelemetry-repo',
+  'https://open-telemetry.github.io/opentelemetry-helm-charts'
+)
+
+helm_resource(
+  'opentelemetry',
+  'opentelemetry-repo/opentelemetry-operator',
+  #resource_deps = ['istio'],
+  namespace = 'observability',
+  labels = 'System',
+  flags = [
+    '--version=0.102.0',
+    '--create-namespace',
+    '--set=manager.autoInstrumentation.go.enabled=true',
+    '--set=admissionWebhooks.certManager.enabled=false',
+  ],
+  auto_init = True,
+)
+
+k8s_resource(
+  workload = 'opentelemetry',
+  labels = ['System'],
+)
+
+local_resource(
+  name='wait-otel-operator-ready',
+  cmd='''
+set -e
+
+kubectl wait --for=condition=Established --timeout=180s crd/opentelemetrycollectors.opentelemetry.io
+kubectl wait --for=condition=Established --timeout=180s crd/instrumentations.opentelemetry.io
+
+kubectl -n observability rollout status deploy/opentelemetry-opentelemetry-operator --timeout=180s && sleep 5
+''',
+  resource_deps=['opentelemetry'],
+)
+
+k8s_yaml('otel-collector.yaml')
+k8s_resource(
+  new_name = 'otel-collector',
+  objects = ['otel-collector'],
+  resource_deps = ['wait-otel-operator-ready'],
+  labels = ['System'],
+)

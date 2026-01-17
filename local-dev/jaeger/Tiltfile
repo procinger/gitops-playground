@@ -9,10 +9,10 @@ helm_resource(
   'jaeger',
   'jaegertracing/jaeger',
   resource_deps = ['istio'],
-  namespace = 'istio-system',
+  namespace = 'observability',
   labels = 'System',
   flags = [
-    '--version=3.4.1',
+    '--version=4.3.4',
     '--create-namespace',
     '--set=query.enabled=false',
     '--set=provisionDataStore.cassandra=false',
@@ -22,7 +22,6 @@ helm_resource(
     '--set=collector.enabled=false',
   ],
   auto_init = False,
-  pod_readiness = 'ignore'
 )
 
 k8s_resource(

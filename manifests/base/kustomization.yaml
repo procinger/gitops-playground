@@ -6,3 +6,4 @@ resources:
 - backend
 - isolation.yaml
 - peer-authentication.yaml
+- otel-instrumentation.yaml

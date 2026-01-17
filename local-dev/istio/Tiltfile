@@ -37,7 +37,10 @@ helm_resource(
     '--set=meshConfig.enableTracing=true',
     '--set=meshConfig.ingressService=istio-gateway',
     '--set=meshConfig.ingressSelector=gateway',
-    '--set=meshConfig.defaultConfig.tracing.zipkin.address=jaeger-collector.istio-system:9411',
+    '--set=meshConfig.defaultConfig.tracing.zipkin.address=jaeger-collector.observability.svc.cluster.local:9411',
+    '--set=meshconfig.extensionProviders[0].name=otel-tracing',
+    '--set=meshconfig.extensionProviders[0].opentelemetry.port=4317',
+    '--set=meshconfig.extensionProviders[0].opentelemetry.service=otel-collector-collector.observability.svc.cluster.local',
     '--wait',
   ],
   auto_init = True
