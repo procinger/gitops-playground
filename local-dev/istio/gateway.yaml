@@ -1,7 +1,7 @@
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: tls-gateway
+  name: kubedev-net
   namespace: istio-gateway
 spec:
   selector:

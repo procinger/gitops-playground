@@ -64,7 +64,7 @@ helm_resource(
 k8s_yaml('gateway.yaml')
 k8s_resource(
   new_name = 'Gateway',
-  objects = ['tls-gateway'],
+  objects = ['kubedev-net'],
   resource_deps = ['istio-gateway'],
   labels = ['System'],
 )
