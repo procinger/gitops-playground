@@ -24,7 +24,7 @@ spec:
         - name: ghcr-io
       containers:
         - name: backend
-          image: ghcr.io/procinger/gitops-demo-frontend/backend:v1.1.0
+          image: ghcr.io/procinger/gitops-playground/backend:v1.1.0
           ports:
             - containerPort: 8080
               name: api
