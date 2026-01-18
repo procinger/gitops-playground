@@ -1,7 +1,7 @@
 github_sha = os.environ.get("GITHUB_SHA", "local")[:7]
 
 docker_build(
-  'localhost:5001/gitops-demo/backend',
+  'localhost:5001/gitops-playground/backend',
   '.',
   only = [
     'Dockerfile',
@@ -9,6 +9,6 @@ docker_build(
     'main.go',
   ],
     extra_tag = [
-      'localhost:5001/gitops-demo/backend:ci-%s' % github_sha
+      'localhost:5001/gitops-playground/backend:ci-%s' % github_sha
     ]
 )
