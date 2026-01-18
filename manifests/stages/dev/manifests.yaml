@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: frontend
-    version: v1.5.3
+    version: v1.6.0
   name: frontend
 spec:
   replicas: 1
@@ -18,14 +18,19 @@ spec:
         instrumentation.opentelemetry.io/otel-go-auto-target-exe: /frontend
       labels:
         app: frontend
-        version: v1.5.3
+        version: v1.6.0
     spec:
       containers:
-      - envFrom:
+      - env:
+        - name: APP_VERSION
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['version']
+        envFrom:
         - configMapRef:
             name: backend-config-tk67b995gg
             optional: false
-        image: ghcr.io/procinger/gitops-demo-frontend/frontend:v1.5.3
+        image: ghcr.io/procinger/gitops-demo-frontend/frontend:v1.6.0
         livenessProbe:
           httpGet:
             path: /
@@ -95,7 +100,7 @@ kind: Deployment
 metadata:
   labels:
     app: backend
-    version: v1.5.3
+    version: v1.6.0
   name: backend
 spec:
   replicas: 1
@@ -110,10 +115,10 @@ spec:
         instrumentation.opentelemetry.io/otel-go-auto-target-exe: /backend
       labels:
         app: backend
-        version: v1.5.3
+        version: v1.6.0
     spec:
       containers:
-      - image: ghcr.io/procinger/gitops-demo-frontend/backend:v1.5.3
+      - image: ghcr.io/procinger/gitops-demo-frontend/backend:v1.6.0
         livenessProbe:
           httpGet:
             path: /healthz
