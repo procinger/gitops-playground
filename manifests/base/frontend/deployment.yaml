@@ -24,7 +24,7 @@ spec:
         - name: ghcr-io
       containers:
         - name: frontend
-          image: ghcr.io/procinger/gitops-demo-frontend/frontend:v1.1.0
+          image: ghcr.io/procinger/gitops-playground/frontend:v1.1.0
           envFrom:
             - configMapRef:
                 name: backend-config
