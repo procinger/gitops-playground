@@ -32,6 +32,11 @@ spec:
           ports:
             - containerPort: 8080
               name: http
+          env:
+            - name: APP_VERSION
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['version']
           resources:
             requests:
               memory: "64Mi"
