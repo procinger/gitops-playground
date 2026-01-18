@@ -1,4 +1,4 @@
-update_settings(max_parallel_updates = 3, k8s_upsert_timeout_secs = 120, suppress_unused_image_warnings = None)
+update_settings(max_parallel_updates = 3, k8s_upsert_timeout_secs = 300, suppress_unused_image_warnings = None)
 # install required cluster tooling
 include('./local-dev/Tiltfile')
 
