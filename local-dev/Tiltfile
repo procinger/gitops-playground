@@ -12,3 +12,6 @@ include('./kiali/Tiltfile')
 
 # Install Prometheus
 include('./prometheus/Tiltfile')
+
+# Install OpenTelemetry Collector
+include('./otel-collector/Tiltfile')

@@ -37,7 +37,10 @@ helm_resource(
     '--set=meshConfig.enableTracing=true',
     '--set=meshConfig.ingressService=istio-gateway',
     '--set=meshConfig.ingressSelector=gateway',
-    '--set=meshConfig.defaultConfig.tracing.zipkin.address=jaeger-collector.istio-system:9411',
+    '--set=meshConfig.defaultConfig.tracing.zipkin.address=jaeger.observability.svc.cluster.local:9411',
+    '--set=meshconfig.extensionProviders[0].name=otel-tracing',
+    '--set=meshconfig.extensionProviders[0].opentelemetry.port=4317',
+    '--set=meshconfig.extensionProviders[0].opentelemetry.service=otel-collector-collector.observability.svc.cluster.local',
     '--wait',
   ],
   auto_init = True
@@ -61,7 +64,7 @@ helm_resource(
 k8s_yaml('gateway.yaml')
 k8s_resource(
   new_name = 'Gateway',
-  objects = ['tls-gateway'],
+  objects = ['kubedev-net'],
   resource_deps = ['istio-gateway'],
   labels = ['System'],
 )

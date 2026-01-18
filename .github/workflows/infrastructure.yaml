@@ -107,6 +107,7 @@ jobs:
 
       - name: Test Container reachability
         run: |
+          sleep 10
           GATEWAY_IP=$(kubectl -n istio-gateway get svc istio-gateway -o jsonpath='{.status.loadBalancer.ingress[].ip}')
           curl --fail http://dev.local/api/time --resolve "dev.local:80:${GATEWAY_IP}"
 

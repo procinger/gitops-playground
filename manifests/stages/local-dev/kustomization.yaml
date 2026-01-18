@@ -28,8 +28,8 @@ configMapGenerator:
       - BACKEND_URL=http://backend
 
 images:
-  - name: ghcr.io/procinger/gitops-demo-frontend/frontend
-    newName: localhost:5001/gitops-demo/frontend
+  - name: ghcr.io/procinger/gitops-playground/frontend
+    newName: localhost:5001/gitops-playground/frontend
 
-  - name: ghcr.io/procinger/gitops-demo-frontend/backend
-    newName: localhost:5001/gitops-demo/backend
+  - name: ghcr.io/procinger/gitops-playground/backend
+    newName: localhost:5001/gitops-playground/backend
