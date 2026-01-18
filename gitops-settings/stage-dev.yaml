@@ -17,7 +17,7 @@ spec:
         kind: AnalysisTemplate
     args:
       - name: frontend-url
-        value: https://demo-dev.hukmedia.de
+        value: https://dev.pg.lab.kubedev.net
   promotionTemplate:
     spec:
       steps:

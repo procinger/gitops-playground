@@ -4,9 +4,9 @@ metadata:
   name: virtualservice
 spec:
   gateways:
-    - istio-gateway/tls-gateway
+    - istio-gateway/kubedev-net
   hosts:
-    - demo-prod.hukmedia.de
+    - prod.pg.lab.kubedev.net
   http:
     # disable /healthz endpoint
     - match:

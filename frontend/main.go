@@ -1,6 +1,7 @@
 package main
 
 import (
+	"html/template"
 	"io"
 	"log"
 	"net/http"
@@ -13,6 +14,11 @@ import (
 const DefaultBackendHost = "http://backend:8080"
 
 func main() {
+	appVersion := os.Getenv("APP_VERSION")
+	if appVersion == "" {
+		appVersion = "none"
+	}
+
 	backendHost := os.Getenv("BACKEND_URL")
 	if backendHost == "" {
 		backendHost = DefaultBackendHost
@@ -26,8 +32,16 @@ func main() {
 	mux := http.NewServeMux()
 	mux.Handle("/api/", proxy)
 
-	fs := http.FileServer(http.Dir("./static"))
-	mux.Handle("/", fs)
+	static := http.FileServer(http.Dir("./static"))
+	mux.Handle("/static/", http.StripPrefix("/static/", static))
+
+	tmpl := template.Must(template.ParseFiles("./template/index.html"))
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		data := map[string]any{
+			"AppVersion": appVersion,
+		}
+		tmpl.Execute(w, data)
+	})
 
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)

@@ -1,3 +1,3 @@
 - op: replace
   path: /spec/hosts/0
-  value: 'demo-dev.hukmedia.de'
+  value: 'dev.pg.lab.kubedev.net'
