@@ -1,5 +1,5 @@
-# GitOps Demo Project with ArgoCD and Kargo.io
-A demo project that demonstrates the collaboration between ArgoCD and Kargo.io.
+# GitOps & Obserability Playground with ArgoCD, Kargo.io, Istio and OpenTelemetry
+A playground project that demonstrates the collaboration between ArgoCD and Kargo.io.
 
 Kargo.io monitors this GitHub repository, including the GitHub Container Registry, for changes,
 renders new manifests, and pushes them back to the GitHub repository.
