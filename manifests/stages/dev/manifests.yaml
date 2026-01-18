@@ -25,7 +25,7 @@ spec:
         - configMapRef:
             name: backend-config-tk67b995gg
             optional: false
-        image: ghcr.io/procinger/gitops-demo-frontend/frontend:v1.4.3
+        image: ghcr.io/procinger/gitops-demo-frontend/frontend:v1.5.0
         livenessProbe:
           httpGet:
             path: /
@@ -70,9 +70,9 @@ metadata:
   name: virtualservice
 spec:
   gateways:
-  - istio-gateway/tls-gateway
+  - istio-gateway/kubedev-net
   hosts:
-  - demo-dev.hukmedia.de
+  - dev.pg.lab.kubedev.net
   http:
   - directResponse:
       body:
@@ -113,7 +113,7 @@ spec:
         version: v1.1.0
     spec:
       containers:
-      - image: ghcr.io/procinger/gitops-demo-frontend/backend:v1.4.3
+      - image: ghcr.io/procinger/gitops-demo-frontend/backend:v1.5.0
         livenessProbe:
           httpGet:
             path: /healthz
