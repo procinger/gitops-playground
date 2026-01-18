@@ -5,11 +5,11 @@ metadata:
 spec:
   vars:
     - name: repoURL
-      value: https://github.com/procinger/gitops-demo-frontend.git
+      value: https://github.com/procinger/gitops-playground.git
     - name: frontendImage
-      value: ghcr.io/procinger/gitops-demo-frontend/frontend
+      value: ghcr.io/procinger/gitops-playground/frontend
     - name: backendImage
-      value: ghcr.io/procinger/gitops-demo-frontend/backend
+      value: ghcr.io/procinger/gitops-playground/backend
     - name: openPr
       value: "false"
 
