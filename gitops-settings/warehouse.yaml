@@ -6,19 +6,19 @@ spec:
   interval: "10m0s"
   subscriptions:
     - image:
-        repoURL: ghcr.io/procinger/gitops-demo-frontend/frontend
+        repoURL: ghcr.io/procinger/gitops-playground/frontend
         imageSelectionStrategy: SemVer
         allowTags: '^v\d+\.\d+\.\d+$'
         constraint: '>= 1.0.0'
         strictSemvers: false
     - image:
-        repoURL: ghcr.io/procinger/gitops-demo-frontend/backend
+        repoURL: ghcr.io/procinger/gitops-playground/backend
         imageSelectionStrategy: SemVer
         allowTags: '^v\d+\.\d+\.\d+$'
         constraint: '>= 1.0.0'
         strictSemvers: false
     - git:
-        repoURL: https://github.com/procinger/gitops-demo-frontend.git
+        repoURL: https://github.com/procinger/gitops-playground.git
         commitSelectionStrategy: SemVer
         allowTags: '^v\d+\.\d+\.\d+$'
         semverConstraint: '>= 1.0.0'
