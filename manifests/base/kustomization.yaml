@@ -6,3 +6,34 @@ resources:
 - backend
 - isolation.yaml
 - peer-authentication.yaml
+
+replacements:
+  - source:
+      kind: Deployment
+      name: frontend
+      fieldPath: spec.template.spec.containers.[name=frontend].image
+      options:
+        delimiter: ":"
+        index: 1
+    targets:
+      - select:
+          kind: Deployment
+          name: frontend
+        fieldPaths:
+          - metadata.labels.version
+          - spec.template.metadata.labels.version
+
+  - source:
+      kind: Deployment
+      name: backend
+      fieldPath: spec.template.spec.containers.[name=backend].image
+      options:
+        delimiter: ":"
+        index: 1
+    targets:
+      - select:
+          kind: Deployment
+          name: backend
+        fieldPaths:
+          - metadata.labels.version
+          - spec.template.metadata.labels.version
