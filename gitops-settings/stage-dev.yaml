@@ -11,13 +11,13 @@ spec:
         name: warehouse
       sources:
         direct: true
-  #verification:
-  #  analysisTemplates:
-  #    - name: frontend-test
-  #      kind: AnalysisTemplate
-  #  args:
-  #    - name: frontend-url
-  #      value: https://demo-dev.hukmedia.de
+  verification:
+    analysisTemplates:
+      - name: frontend-test
+        kind: AnalysisTemplate
+    args:
+      - name: frontend-url
+        value: https://dev.pg.lab.kubedev.net
   promotionTemplate:
     spec:
       steps:
