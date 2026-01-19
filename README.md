@@ -98,7 +98,7 @@ spec:
             istio-injection: enabled
 ```
 
-### Kiali Service Mesh
+### Kiali - Istio Service Mesh Console
 To view and analyze the service mesh in a graph, Kiali should be installed. Kiali requires Prometheus and Jaeger as dependencies.
 
 Kiali login tokens have a short lifetime, so a new token must be requested each time.
