@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: frontend
-    version: v1.7.0
+    version: v1.8.0
   name: frontend
 spec:
   replicas: 1
@@ -18,7 +18,7 @@ spec:
         instrumentation.opentelemetry.io/otel-go-auto-target-exe: /frontend
       labels:
         app: frontend
-        version: v1.7.0
+        version: v1.8.0
     spec:
       containers:
       - env:
@@ -30,7 +30,7 @@ spec:
         - configMapRef:
             name: backend-config-tk67b995gg
             optional: false
-        image: ghcr.io/procinger/gitops-demo-frontend/frontend:v1.7.0
+        image: ghcr.io/procinger/gitops-playground/frontend:v1.8.0
         livenessProbe:
           httpGet:
             path: /
@@ -100,7 +100,7 @@ kind: Deployment
 metadata:
   labels:
     app: backend
-    version: v1.7.0
+    version: v1.8.0
   name: backend
 spec:
   replicas: 1
@@ -115,10 +115,10 @@ spec:
         instrumentation.opentelemetry.io/otel-go-auto-target-exe: /backend
       labels:
         app: backend
-        version: v1.7.0
+        version: v1.8.0
     spec:
       containers:
-      - image: ghcr.io/procinger/gitops-demo-frontend/backend:v1.7.0
+      - image: ghcr.io/procinger/gitops-playground/backend:v1.8.0
         livenessProbe:
           httpGet:
             path: /healthz
@@ -178,6 +178,30 @@ metadata:
 spec:
   mtls:
     mode: STRICT
+---
+apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+  name: instrumentation
+spec:
+  exporter:
+    endpoint: http://otel-collector-collector.observability.svc.cluster.local:4318
+  propagators:
+  - tracecontext
+  - baggage
+  sampler:
+    argument: "1"
+    type: parentbased_traceidratio
+---
+apiVersion: telemetry.istio.io/v1
+kind: Telemetry
+metadata:
+  name: otel
+spec:
+  tracing:
+  - providers:
+    - name: otel-tracing
+    randomSamplingPercentage: 100
 ---
 apiVersion: v1
 data:
