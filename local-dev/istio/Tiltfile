@@ -13,7 +13,7 @@ helm_resource(
   namespace = 'istio-system',
   labels = 'System',
   flags = [
-    '--version=1.28.0',
+    '--version=1.29.1',
     '--create-namespace',
   ],
   auto_init = True,
@@ -29,7 +29,7 @@ helm_resource(
   namespace = 'istio-system',
   labels = 'System',
   flags = [
-    '--version=1.28.0',
+    '--version=1.29.1',
     '--create-namespace',
     '--set=autoscaleEnabled=false',
     '--set=traceSampling=100.0',
@@ -54,7 +54,7 @@ helm_resource(
   namespace = 'istio-gateway',
   labels = 'System',
   flags = [
-    '--version=1.28.0',
+    '--version=1.29.1',
     '--set=autoscaling.enabled=false',
     '--create-namespace',
   ],
