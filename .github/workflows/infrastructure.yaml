@@ -111,6 +111,11 @@ jobs:
           GATEWAY_IP=$(kubectl -n istio-gateway get svc istio-gateway -o jsonpath='{.status.loadBalancer.ingress[].ip}')
           curl --fail http://dev.local/api/time --resolve "dev.local:80:${GATEWAY_IP}"
 
+      - name: Test Coraza WAF
+        run: |
+          GATEWAY_IP=$(kubectl -n istio-gateway get svc istio-gateway -o jsonpath='{.status.loadBalancer.ingress[].ip}')
+          STATUS=$(curl -w "%{http_code}" "http://dev.local/api/time?id=<script>alert(123)</script>" --resolve "dev.local:80:${GATEWAY_IP}")
+          test "$STATUS" = "403"
       - name: Export KinD logs
         run: kind export logs ${{ github.workspace }}/kind-logs
 

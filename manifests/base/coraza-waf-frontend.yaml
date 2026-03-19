@@ -1,0 +1,21 @@
+apiVersion: extensions.istio.io/v1alpha1
+kind: WasmPlugin
+metadata:
+  name: coraza-waf-frontend
+spec:
+  selector:
+    matchLabels:
+      app: frontend
+  url: oci://ghcr.io/corazawaf/coraza-proxy-wasm:0.6.0
+  imagePullPolicy: IfNotPresent
+  phase: AUTHN
+  match:
+    - mode: SERVER
+      ports:
+        - number: 8080
+  pluginConfig:
+    rules: |
+      Include @recommended-conf
+      SecRuleEngine On
+      Include @crs-setup-conf
+      Include @owasp_crs/*.conf
