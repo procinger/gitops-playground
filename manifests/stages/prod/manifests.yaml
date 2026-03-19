@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: frontend
-    version: v1.8.0
+    version: v1.10.0
   name: frontend
 spec:
   replicas: 1
@@ -18,7 +18,7 @@ spec:
         instrumentation.opentelemetry.io/otel-go-auto-target-exe: /frontend
       labels:
         app: frontend
-        version: v1.8.0
+        version: v1.10.0
     spec:
       containers:
       - env:
@@ -30,7 +30,7 @@ spec:
         - configMapRef:
             name: backend-config-tk67b995gg
             optional: false
-        image: ghcr.io/procinger/gitops-playground/frontend:v1.8.0
+        image: ghcr.io/procinger/gitops-playground/frontend:v1.10.0
         livenessProbe:
           httpGet:
             path: /
@@ -69,7 +69,7 @@ spec:
   selector:
     app: frontend
 ---
-apiVersion: networking.istio.io/v1beta1
+apiVersion: networking.istio.io/v1
 kind: VirtualService
 metadata:
   name: virtualservice
@@ -100,7 +100,7 @@ kind: Deployment
 metadata:
   labels:
     app: backend
-    version: v1.8.0
+    version: v1.10.0
   name: backend
 spec:
   replicas: 1
@@ -115,10 +115,10 @@ spec:
         instrumentation.opentelemetry.io/otel-go-auto-target-exe: /backend
       labels:
         app: backend
-        version: v1.8.0
+        version: v1.10.0
     spec:
       containers:
-      - image: ghcr.io/procinger/gitops-playground/backend:v1.8.0
+      - image: ghcr.io/procinger/gitops-playground/backend:v1.10.0
         livenessProbe:
           httpGet:
             path: /healthz
@@ -158,7 +158,7 @@ spec:
   selector:
     app: backend
 ---
-apiVersion: security.istio.io/v1beta1
+apiVersion: security.istio.io/v1
 kind: AuthorizationPolicy
 metadata:
   name: isolation
@@ -202,6 +202,28 @@ spec:
   - providers:
     - name: otel-tracing
     randomSamplingPercentage: 100
+---
+apiVersion: extensions.istio.io/v1alpha1
+kind: WasmPlugin
+metadata:
+  name: coraza-waf-frontend
+spec:
+  imagePullPolicy: IfNotPresent
+  match:
+  - mode: SERVER
+    ports:
+    - number: 8080
+  phase: AUTHN
+  pluginConfig:
+    rules: |
+      Include @recommended-conf
+      SecRuleEngine On
+      Include @crs-setup-conf
+      Include @owasp_crs/*.conf
+  selector:
+    matchLabels:
+      app: frontend
+  url: oci://ghcr.io/corazawaf/coraza-proxy-wasm:0.6.0
 ---
 apiVersion: v1
 data:
