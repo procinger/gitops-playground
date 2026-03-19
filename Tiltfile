@@ -31,3 +31,12 @@ k8s_resource(
   labels = ['App'],
   resource_deps = ['istio-gateway', 'wait-otel-operator-ready'],
 )
+
+k8s_resource(
+  objects=[
+    'coraza-waf-frontend:wasmplugin'
+  ],
+  new_name='Coraza WAF Frontend',
+  labels = ['App'],
+  resource_deps = ['istio-gateway'],
+)
